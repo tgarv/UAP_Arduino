@@ -37,7 +37,8 @@ Adafruit_NFCShield_I2C nfc(IRQ, RESET);
 */
 // For a http://www. url:
 //char * data = "d224206170706c69636174696f6e2f636f6d2e6578616d706c652e616e64726f69642e6265616d4265616d206d65207570210a0a4265616d2054696d653a2031363a30303a3033";
-char * data = "example.com/example1example2example3example4example5";
+// char * data = "example.com/thisisalongstringwithsomewordsthatihopewillgetwrittentothetagsoicangraduate";
+char * data = "example.com/example1example2example3example4exampl5example6example7example8example9";
 uint8_t ndefprefix = NDEF_URIPREFIX_HTTP_WWWDOT;
 
 // for an email address
@@ -79,6 +80,8 @@ void loop(void) {
   // Use the default NDEF keys (these would have have set by mifareclassic_formatndef.pde!)
   uint8_t keya[6] = { 0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5 };
   uint8_t keyb[6] = { 0xD3, 0xF7, 0xD3, 0xF7, 0xD3, 0xF7 };
+  uint8_t keyc[6] = { 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5 };
+  uint8_t keyd[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
   Serial.println("Place your NDEF formatted Mifare Classic card on the reader to update the");
   Serial.println("NDEF record and press any key to continue ...");
@@ -113,19 +116,12 @@ void loop(void) {
 
     // Check if this is an NDEF card (using first block of sector 1 from mifareclassic_formatndef.pde)
     // Must authenticate on the first key using 0xD3 0xF7 0xD3 0xF7 0xD3 0xF7
-
-    success = nfc.mifareclassic_AuthenticateBlock (uid, uidLength, 4, 0, keyb);
-    // if (!success)
-    // {
-    //   Serial.println("Unable to authenticate block 4 ... is this card NDEF formatted?");
-    //   return;
-    // }
     
     // Serial.println("Authentication succeeded (seems to be an NDEF/NFC Forum tag) ...");
     
     // Serial.println("Updating sector 1 with URI as NDEF Message");
     
-    nfc.mifareclassic_WriteString(uid, uidLength, keyb, 4, data);
+    nfc.mifareclassic_WriteString(uid, uidLength, keyb, 12, "Entirely new string\0");
     //success = nfc.mifareclassic_ClearData(uid, uidLength, keyb);
   }
   

@@ -129,9 +129,9 @@ void loop(void) {
       // Now we try to go through all 16 sectors (each having 4 blocks)
       // authenticating each sector, and then dumping the blocks            
       for (currentblock = 0; currentblock < 64; currentblock++){   // 4K card, should have 4K/16 = 256 sectors
-        if (currentblock%4 == 3) {  // 4th block of each sector always seems to be garbage
-          continue;
-        }
+        // if (currentblock%4 == 3) {  // 4th block of each sector always seems to be garbage
+        //   continue;
+        // }
         // Check if this is a new block so that we can reauthenticate
         if (nfc.mifareclassic_IsFirstBlock(currentblock))
           authenticated = false;
@@ -173,7 +173,7 @@ void loop(void) {
             Serial.print(" \t");
 
             // Dump the raw data
-            nfc.PrintHexChar(data, 20);
+            nfc.PrintHexChar(data, 16);
 
             if (currentblock > 3){  // First sector isn't stuff we want to keep for the tag data
 
@@ -196,13 +196,14 @@ void loop(void) {
           }
         }       
       }
+
+      Serial.println(tagString);  // Print out the contents of the tag
       
-    } else {
+    } else {  // UID length != 4
       Serial.println("Ooops ... this doesn't seem to be a Mifare Classic card!"); 
     }
   }
   
-  Serial.println(tagString);
   // Wait a bit before trying again
   Serial.println("\n\nSend a character to run the mem dumper again!");
   Serial.flush();
